@@ -11,13 +11,13 @@
 const inputSearch = document.querySelector('.js-search');
 const buttonSearch = document.querySelector('.js-search-btn');
 const resetButton = document.querySelector('.js-reset-btn');
-const results = document.querySelector('.js-results');
+let results = document.querySelector('.js-results');
 
 
 const handleClick = (event) => {
 event.preventDefault();
-console.log(event.target);
-
+const searchValue = inputSearch.value; //recojo lo que escribe la usuaria
+// console.log('busqueda:', searchValue);
 
 }
 
@@ -33,15 +33,23 @@ inputSearch.addEventListener("click", handleClick);
 
 */
 
-// fetch("https://api.jikan.moe/v4/anime?q=naruto")
-// .then((response) => {
-//     return response.json();
-// })
-// .then((info) => {
+fetch("https://api.jikan.moe/v4/anime?q=naruto")
+.then((response) => {
+    return response.json();
+})
+.then((info) => {
    
-//  const series = info.data;
-//  console.log(series);
+ const series = info.data; //objeto
+ const data = series[0];
+ console.log(data);
+ results.innerHTML = `<li>
+        <h1>${data.title}</h1>
+        <img src="${data.images.jpg.image_url}" alt="${data.title}">
+        </li>`;
 
-// })
+//  const data = series[0].images.jpg.image_url; //array
+//  console.log(data);
+//  results = [data, searchValue];
+//  results.innerHTML = `<ul>${results.images.jpg.image_url}</ul>`;
+})
 
-//creo ul vacía
