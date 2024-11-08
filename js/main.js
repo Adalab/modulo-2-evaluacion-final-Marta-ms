@@ -93,9 +93,6 @@ const renderSeriesList = (series) => {
 
 
 
-
-
-
 /*2.pido los datos al servidor
 -cuando la usuaria haga click en buscar 
     -recojo el valor del input
@@ -122,7 +119,7 @@ const handleButtonSearch = () => {
             const dataImage = serie.images.jpg.image_url;
             const dataId = serie.mal_id;
 
-            seriesList.push({ //añadir elemento al final de un array
+            seriesList.push({ //agregar los elementos obtenido en una lista (array) para luego renderizarlos en html
                 dataTitle,
                 dataImage,
                 dataId,
