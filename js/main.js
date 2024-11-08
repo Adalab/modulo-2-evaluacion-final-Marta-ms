@@ -16,27 +16,12 @@ const favourites = document.querySelector('.js-list-favourites');
 let seriesList = []; // lista de series que se van a mostrar en el html
 let seriesFavourites = [];
 
-// inputSearch.addEventListener("click", handleClick);
-// formElement.addEventListener("submit", getData);
 
-// /*Pintar tre imágenes de portadas de series anime
-//  -Conseguir la información -- > peticion al servidor para obtener la 3 imágenes 
-// */
 
 // const series = info.data; //objeto accedo y guardo toda la información de las series 
 
-// for (const serie of series){
-// let content =  `<li>
-// <h1>${series.title}</h1>`
-//     for (const image of series.images) {
-//         content += `<img src="${series.images.jpg.image_url}" alt="portada">`
-//     }
-//     content += `</li>`;
-//     results.innerHTML += content;
-// }
 
-
-/*2.2Por cada serie que contiene el resultado---
+/*2.2Por cada serie que contiene el resultado---bucle for of
 -pinto las series con su titulo en el html cuando me la devuelva el servidor
 -Si la busqueda no tiene imagen, buscar una de relleno (placeholder.com)*/
 
@@ -49,33 +34,6 @@ const renderSeriesList = (series) => {
     }
 }; //OK
 
-//pintar la lista de favoritas
-const renderSelectedFavourites = (series) => {
-    favourites.innerHTML = "";
-    for (const serie of series) {
-      favourites.innerHTML += `
-          <li class="js-serie" id=${serie.idSerie}>
-              <img
-                src=${serie.urlImage}
-                alt="${serie.titleSerie}"
-              />
-              <p>${serie.titleSerie}</p>
-            </li>
-          `;
-    }
-  }; //OKK
-
-  //añadir nueva serie a la lista
-  const addNewFav = () => {
-    const seriesSelects = document.querySelectorAll(".js-serie");
-    for (const serieSelect of seriesSelects) {
-      serieSelect.addEventListener("click", handleAddFavourites);
-    }
-  };
-
-//SAVE LOCAL STOREAGE
-
-
 /*2.pido los datos al servidor
 -cuando la usuaria haga click en buscar 
     -recojo el valor del input
@@ -83,7 +41,7 @@ const renderSelectedFavourites = (series) => {
 
 */
 
-const handleButtonSearch = (ev) => {
+function handleButtonSearch(ev){
     ev.preventDefault();
     const searchValue = inputSearch.value;
 
@@ -111,32 +69,72 @@ const handleButtonSearch = (ev) => {
             const dataTitle = serie.title;
             // dataImage = serie.images.jpg.image_url;
             const dataId = serie.mal_id;
+            
 
             seriesList.push({ //agregar los elementos obtenido en una lista (array) para luego renderizarlos en html
                 dataTitle,
                 dataImage,
                 dataId,
             }); 
-            
-        }
+
+            const seriesSelects = document.querySelectorAll(".js-series");
+            for (const serieSelect of seriesSelects) { 
+                serieSelect.addEventListener("click", handleAddFavourites);
+                console.log("has hecho click");
+
+            }
         renderSeriesList(seriesList);
-        renderSelectedFavourites();
-      });
+      };
+    });
+
 };
     
-//1.Escucho el click de la búsqueda
+
+//añadir nueva serie a la lista
+
+//pintar la lista de favoritas
+const renderSelectedFavourites = (series) => {
+    favourites.innerHTML = "";
+    for (const serie of series) {
+      favourites.innerHTML += `
+          <li class="js-serie" id=${serie.mal_id}>
+              <img
+                src=${serie.urlImage}
+                alt="${serie.titleSerie}"
+              />
+              <p>${serie.titleSerie}</p>
+            </li>
+          `;
+    }
+  }; //OKK
+
+  //1.Escucho el click de la búsqueda
 buttonSearch.addEventListener("click", handleButtonSearch);
+
+
+
+
+//SAVE LOCAL STOREAGE
 
 
 const handleAddFavourites = (event) => {
     const idSerieSelect = event.currentTaregt.id; //recojo id de las series que selecciona
-    const seriesSelectFavorites = seriesList.find((serie) => {
-        return serie.dataId === parseInt(idSerieSelect); //buscar lo seleccionado
-    })
-    seriesFavourites.push(seriesSelectFavorites);
+    const seriesSelectFavourites = seriesList.find((series) => {
+        return dataId === parseInt(idSerieSelect); //buscar lo seleccionado
+        
+    });
+    
+    seriesFavourites.push(seriesSelectFavourites);
+
+    //cuando la usuaria haga click cambia el titulo de color
+    idSerieSelect.classList.add("style-fav");
 
     renderSeriesList(seriesFavorites);
     savedLocalStoreage(seriesFavorites);
+
+    //pintar la lista de favoritas
+
+    
 }
 
 // const seriesSelected = document.querySelectorAll(".js-anime");
@@ -155,6 +153,3 @@ const handleAddFavourites = (event) => {
     // localStorage.setItem("animeFavourites", JSON.stringify(seriesFavorites));
     // savedAnimeFavourites = JSON.parse(localStorage.getItem("animeFavourites"));
 
-
-
-// favorites.addEventListener("click", handleAddFavorites);
