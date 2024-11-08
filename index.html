@@ -10,22 +10,23 @@
 <body>
     <header>
         <h1>Buscador de series de anime</h1>
+        <form class="js-form">
+            <div class="form-container">
+                <input class="js-input-search" type="text" name="search" id="search" placeholder="Introduce un nombre"/>
+                <input class="js-btn-search" type="button" value="search"/>
+                <button class="js-reset-btn">Reset</button>
+            </div>
+        </form>
     </header>
     <main>
-        <section class="container-search">
-            <form class="">
-                <input class="js-search" type="text" id="search" placeholder="Buscar serie">
-                <button class="js-search-btn">Buscar</button>
-                <button class="js-reset-btn">Reset</button>
-            </form>
-            <ul class="js-results">
-
-            </ul>
+        <section class="section-search">
+            <p>Resultado:</p>  
+            <ul class="js-list-results"></ul>
         </section>
-
-        <aside>
-            <h2>Series favoritas</h2>
-        </aside>
+        <section class="section-fav">
+            <p>Series favoritas</p>
+            <ul class="js-list-favorite"></ul>
+        </section>
 
     </main>
 
