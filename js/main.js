@@ -13,6 +13,7 @@ const buttonSearch = document.querySelector('.js-btn-search');
 const resetButton = document.querySelector('.js-btn-reset');
 const formElement =document.querySelector('.js-form');
 const results = document.querySelector('.js-list-results');
+const favorites = document.querySelector('.js-list-favorites');
 let seriesList = []; // lista de series que se van a mostrar en el html
 let seriesFavorites = [];
 
@@ -59,12 +60,6 @@ let seriesFavorites = [];
 
 // }
 
-   
-    
-
-
-
-
 //  const data = series[0];
 //  console.log(data);
 //  results.innerHTML = `<li>
@@ -90,6 +85,7 @@ const renderSeriesList = (series) => {
          </li>`;
     }
 };
+
 
 
 
@@ -126,9 +122,29 @@ const handleButtonSearch = () => {
             })     
         }
         renderSeriesList(seriesList);
-        // addSeriesFavorites();
+        addSeriesFavorites();
     });
 };
     
 //1.Escucho el click de la búsqueda
 buttonSearch.addEventListener("click", handleButtonSearch);
+favorites.addEventListener("click", addSeriesFavorites);
+
+
+////pintar series favoritas
+
+const hanldeAddFavorites(event) {
+    const seriesId = event.target.id;
+    const idSerieClicked = event.currentTaregt.id;
+
+    const seriesClickFavorites = seriesList.find((serie) => {
+        return serie.dataId === idSerieClicket;
+    })
+
+    //añadir esa serie a la lista de favoritas
+    favorites.push(seriesClickFavorites);
+
+    renderSeriesFav(seriesFavorites);
+
+
+};
