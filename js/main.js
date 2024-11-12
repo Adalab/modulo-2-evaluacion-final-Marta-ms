@@ -11,7 +11,6 @@ let listFavourites = [];
 let listSelectFavourites = document.querySelector(".js-favourites");
 
 
-
 //PRIMERO
 
 //Pintar las paletas en el hatml
