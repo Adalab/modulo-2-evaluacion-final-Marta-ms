@@ -8,24 +8,24 @@
     <link rel="stylesheet" href="./CSS/style.css">
 </head>
 <body>
-    <header class="container">
+    <header class="header-container">
         <h1 >Buscador de series de anime</h1>
         <form class="js-form">
             <div class="form-container">
-                <input class="js-input-search" type="text" name="search" id="search" placeholder="Introduce un nombre"/>
-                <button class="js-btn-search">Buscar</button>
-                <button class="js-reset-btn">Reset</button>
+                <input class="js-input" type="text" name="search" id="search" placeholder="Introduce un nombre"/>
+                <button class="js-button">Buscar</button>
+                <button class="js-reset">Reset</button>
             </div>
         </form>
     </header>
     <main class="main-container">
-        <section class="section-fav">
+        <section class="section-favourites">
             <p>Series favoritas</p>
-            <ul class="js-list-favourites"></ul>
+            <ul class="js-favourites"></ul>
         </section>
-        <section class="section-search">
+        <section class="section-results">
             <p>Resultado:</p>  
-            <ul class="js-list-results"></ul>
+            <ul class="results js-list"></ul>
         </section>
     </main>
     <script src="./js/main.js"></script>

@@ -1,155 +1,132 @@
 "use strict"
 
-/*Cuando la usuaria haga click en el buscardor pido los datos al servidor
 
--seleccionar los elementos del html: input, boton buscar, reset
--recoger lo que ha escrito la usuaria en el input 
--concatenarlo a la direccion del api
-*/
-
-const inputSearch = document.querySelector('.js-input-search');
-const buttonSearch = document.querySelector('.js-btn-search');
-const resetButton = document.querySelector('.js-btn-reset');
-// const formElement =document.querySelector('.js-form');
-const resultsList = document.querySelector('.js-list-results');
-const favourites = document.querySelector('.js-list-favourites');
-let seriesList = []; // lista de series que se van a mostrar en el html
-let seriesFavourites = [];
+const input = document.querySelector(".js-input");
+const button = document.querySelector(".js-button");
+const reset = document.querySelector(".js-reset");
+const favouritesList = document.querySelector(".js-favourites");
+const results = document.querySelector(".js-list");
+let listElement = [];
+let listFavourites = [];
+let listSelectFavourites = document.querySelector(".js-favourites");
 
 
 
-// const series = info.data; //objeto accedo y guardo toda la información de las series 
+//PRIMERO
 
+//Pintar las paletas en el hatml
+function renderSeries() {
+    for (const series of listElement) {
+        let image = series.images.jpg.image_url;
 
-/*2.2Por cada serie que contiene el resultado---bucle for of
--pinto las series con su titulo en el html cuando me la devuelva el servidor
--Si la busqueda no tiene imagen, buscar una de relleno (placeholder.com)*/
+        if (image === "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png") {
+            // console.log("que pasa");
+            image = "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256";
 
-const renderSeriesList = (series) => {
-    for (const serie of series) {
-        resultsList.innerHTML += `<li id=${serie.dataId}>
-        <h1>${serie.dataTitle}</h1>
-        <img src="${serie.dataImage}" alt="${serie.dataTitle}"/>
-         </li>`;
-    }
-}; //OK
+        }
 
-/*2.pido los datos al servidor
--cuando la usuaria haga click en buscar 
-    -recojo el valor del input
-          ---> pido los datos al servidor
-
-*/
-
-function handleButtonSearch(ev){
-    ev.preventDefault();
-    const searchValue = inputSearch.value;
-
-    fetch(`https://api.jikan.moe/v4/anime?q=${searchValue}`) //concatenar searchValue es lo que busca la usuaria y lo que manda al servidor
-        .then((response) => response.json())
-        .then((info) => {
-        // console.log(info); //info ---> data
-        const series = info.data; //objeto accedo y guardo toda la información de las series 
-        // console.log("series es", series);
-        resultsList.innerHTML= "";
-        for (const serie of series) {
-            //console.log(serie); //serie ---> objeto
-            //recojo en una variable la información que quiero de cada serie: titulo,imagen,id
-
-            let dataImage = serie.images.jpg.image_url;
-            if (dataImage === "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"){
-                dataImage = "https://picsum.photos/200/300";
-            }
-
-            // resultsList.innerHTML += `
-            // <li id=${serie.dataId}>
-            // <h1>${serie.dataTitle}</h1>
-            // <img src="${serie.dataImage}" alt="${serie.dataTitle}"/>
-            //  </li>`;
-            const dataTitle = serie.title;
-            // dataImage = serie.images.jpg.image_url;
-            const dataId = serie.mal_id;
-            
-
-            seriesList.push({ //agregar los elementos obtenido en una lista (array) para luego renderizarlos en html
-                dataTitle,
-                dataImage,
-                dataId,
-            }); 
-
-            const seriesSelects = document.querySelectorAll(".js-series");
-            for (const serieSelect of seriesSelects) { 
-                serieSelect.addEventListener("click", handleAddFavourites);
-                console.log("has hecho click");
-
-            }
-        renderSeriesList(seriesList);
-      };
-    });
-
-};
-    
-
-//añadir nueva serie a la lista
-
-//pintar la lista de favoritas
-const renderSelectedFavourites = (series) => {
-    favourites.innerHTML = "";
-    for (const serie of series) {
-      favourites.innerHTML += `
-          <li class="js-serie" id=${serie.mal_id}>
-              <img
-                src=${serie.urlImage}
-                alt="${serie.titleSerie}"
-              />
-              <p>${serie.titleSerie}</p>
+        //lista de mi html
+        results.innerHTML += `
+            <li class="style-fav js-anime" id=${series.mal_id}>
+            <h1>${series.title}</h1>
+            <img src="${image}" alt="${series.title}" />
             </li>
-          `;
-    }
-  }; //OKK
+            `
 
-  //1.Escucho el click de la búsqueda
-buttonSearch.addEventListener("click", handleButtonSearch);
-
-
-
-
-//SAVE LOCAL STOREAGE
-
-
-const handleAddFavourites = (event) => {
-    const idSerieSelect = event.currentTaregt.id; //recojo id de las series que selecciona
-    const seriesSelectFavourites = seriesList.find((series) => {
-        return dataId === parseInt(idSerieSelect); //buscar lo seleccionado
         
-    });
-    
-    seriesFavourites.push(seriesSelectFavourites);
-
-    //cuando la usuaria haga click cambia el titulo de color
-    idSerieSelect.classList.add("style-fav");
-
-    renderSeriesList(seriesFavorites);
-    savedLocalStoreage(seriesFavorites);
-
-    //pintar la lista de favoritas
-
-    
+        //recoger TODAS las series
+        const animes = document.querySelectorAll(".js-anime"); //me devuelve un array
+        for (const anime of animes) {
+            anime.addEventListener("click", handleAddFavourites);
+        }
+    }
 }
 
-// const seriesSelected = document.querySelectorAll(".js-anime");
-// for (const selected of seriesSelected){
-//     selected.addEventListener("click", handleAddFavorites);//convertir la lista a string para enviarla al servidor
-// }   
-   
 
-    // seriesFavourites.innerHTML += `<li id=${seriesSelectFavorites.dataId}>
-    //     <h1>${seriesSelectFavorites.dataTitle}</h1>
-    //     <img src="${seriesSelectFavorites.dataImage}" alt="${seriesSelectFavorites.dataTitle}"/>
-    //      </li>`;
+//cuando haga click, coger datos de la api para buscar lo que escriba en el input
+//función manejadora del click del botón buscar
+function handleClick(event) { 
+    event.preventDefault();
+    const inputValue = input.value; //recojo el valor del input
+    //console.log(listElement);
+    fetch(`https://api.jikan.moe/v4/anime?q=${inputValue}`)
+    .then(response => response.json())
+    .then(info => {
+        listElement = info.data;
+        renderSeries(); //datos obtenidos
+        // console.log("ha hecho click");
+    })
+}
+button.addEventListener("click", handleClick);
+
+//SEGUNDO
+/*Seleccionar las series favoritas
+    -seleccionar elementos html
+    -cuando la usuaira haga click
+        -recoger las series seleccionadas
+        -pintar series en la lista de favoritos
+
+*/
+
+function handleAddFavourites(event) {
+    console.log("click en anime");
+    const seriesId = event.currentTarget.id;
+    
+
+    //buscar las portadas clicadas
+    const seriesSelect = listElement.find(series => series.mal_id === parseInt(seriesId));
+    //console.log(seriesSelect);
+
+    //añadir a lista de favoritos
+    listFavourites.push(seriesSelect);
+    //console.log(listFavourites);
+    
+    
+    //añadir lista de favoritos al localStoreage
+    localStorage.setItem("favourites", JSON.stringify(listFavourites));
+    
+
+    //pintar desde localstoreage
+    listSelectFavourites.innerHTML +="";
+    //añadir clase cuando sea seleccionada
+    listSelectFavourites.classList.toggle("favourites"); 
+    localFavourites();
+}
+
+//añadir a la lista de fav
+function localFavourites() { 
+    for (const selection of listFavourites) {
+        listSelectFavourites.innerHTML += `
+        <li class="style-fav" id=${selection.mal_id}>
+        <h1>${selection.title}</h1>
+        <img src="${selection.images.jpg.image_url}" alt="${selection.title}" />
+        </li>
+        `
+    }
+}
+
+//TERCERO
+//recoger lista de fav en localstoreage
+const localStoreageFav = JSON.parse(localStorage.getItem("favourites"));
+//console.log(localStoreageFav);
 
 
-    // //localStore
-    // localStorage.setItem("animeFavourites", JSON.stringify(seriesFavorites));
-    // savedAnimeFavourites = JSON.parse(localStorage.getItem("animeFavourites"));
+if (localStoreageFav !== null) {
+    listFavourites = localStoreageFav;
+    localFavourites(localStoreageFav);
+}
 
+
+
+//RESET
+function handleReset(event) {
+    event.preventDefault();
+    listSelectFavourites.innerHTML = "";
+    results.innerHTML = "";
+    input.value = "";
+    localStorage.clear();
+    listFavourites = [];
+}
+
+//escucho el boton reset
+reset.addEventListener("click", handleReset);
